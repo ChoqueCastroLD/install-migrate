@@ -4,17 +4,19 @@ const fs = require('fs');
 
 const path = require('path');
 
-const dir = (...relative) => {
-    console.log(path.resolve(__dirname, ...relative));
-    return path.resolve(__dirname, ...relative);
-}
+console.log(__dirname);
+
+
+
+const dir = (...relative) => path.resolve(__dirname, ...relative);
+const cwd = (...relative) => path.resolve(process.cwd(), ...relative);
 
 async function main() {
 
-    fs.mkdirSync(dir('src'), {
+    fs.mkdirSync(cwd('src'), {
         recursive: true
     });
-    fs.mkdirSync(dir('src', 'migrations'), {
+    fs.mkdirSync(cwd('src', 'migrations'), {
         recursive: true
     });
 
@@ -22,12 +24,12 @@ async function main() {
     const template = fs.readFileSync(dir('template.js'));
     const database = fs.readFileSync(dir('create_database.js'));
 
-    fs.writeFileSync(dir('src', 'migrations', '.template.js'), template);
-    fs.writeFileSync(dir('src', 'migrations', '0000000000000-create-database.js'), database);
+    fs.writeFileSync(cwd('src', 'migrations', '.template.js'), template);
+    fs.writeFileSync(cwd('src', 'migrations', '0000000000000-create-database.js'), database);
 
-    const envExists = fs.existsSync(dir('.env'));
+    const envExists = fs.existsSync(cwd('.env'));
 
-    let package = JSON.parse(fs.readFileSync(dir('package.json')).toString());
+    let package = JSON.parse(fs.readFileSync(cwd('package.json')).toString());
 
     package.scripts = {
         ...package.scripts,
@@ -42,7 +44,7 @@ async function main() {
         "migrate": "^1.6.2"
     }
 
-    fs.writeFileSync(dir('package.json'), JSON.stringify(package, undefined, 4));
+    fs.writeFileSync(cwd('package.json'), JSON.stringify(package, undefined, 4));
 
     if (envExists) {
         console.log(`
@@ -55,16 +57,12 @@ async function main() {
         `);
     } else {
     
-fs.writeFileSync(dir('.env'), `DB_DATABASE=MyDatabase
+fs.writeFileSync(cwd('.env'), `DB_DATABASE=MyDatabase
 DB_HOST=127.0.0.1
 DB_USER=root
 DB_PASSWORD=`);
 
     }
-
-
-
-
 }
 
 
