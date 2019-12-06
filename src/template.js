@@ -16,11 +16,8 @@ async function up () {
     CREATE TABLE user(
         id INT PRIMARY KEY AUTO_INCREMENT,
 
-        name VARCHAR(30),
-        lastname VARCHAR(60),
-        birthdate DATE,
-        phone VARCHAR(10),
-        email VARCHAR(255) UNIQUE,
+        name VARCHAR(30) NOT NULL,
+        email VARCHAR(255) NOT NULL UNIQUE,
 
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
